@@ -170,6 +170,7 @@
 		// Enable match-preparation method to be passed as option:
 		this.prepMatch = options.prepMatch || this.prepMatch;
 
+		this.ranges = [];
 		this.reverts = [];
 
 		this.matches = this.search();
@@ -375,8 +376,15 @@
 				doAvoidNode = curNode.nodeType === 1 && elementFilter && !elementFilter(curNode);
 
 				if (startPortion && endPortion) {
+					
+					var range = new Range();
+					range.setStart(startPortion.node, startPortion.indexInNode);
+					range.setEnd(endPortion.node, endPortion.endIndexInNode);
+					this.ranges.push(range);
 
-					curNode = this.replaceMatch(match, startPortion, innerPortions, endPortion);
+					if (this.options.replace) {
+						curNode = this.replaceMatch(match, startPortion, innerPortions, endPortion);
+					}
 
 					// processMatches has to return the node that replaced the endNode
 					// and then we step back so we can continue from the end of the
