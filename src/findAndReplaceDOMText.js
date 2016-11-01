@@ -384,13 +384,13 @@
 
 					if (this.options.replace) {
 						curNode = this.replaceMatch(match, startPortion, innerPortions, endPortion);
+
+						// processMatches has to return the node that replaced the endNode
+						// and then we step back so we can continue from the end of the
+						// match:
+
+						atIndex -= (endPortion.node.data.length - endPortion.endIndexInNode);
 					}
-
-					// processMatches has to return the node that replaced the endNode
-					// and then we step back so we can continue from the end of the
-					// match:
-
-					atIndex -= (endPortion.node.data.length - endPortion.endIndexInNode);
 
 					startPortion = null;
 					endPortion = null;
@@ -401,6 +401,11 @@
 
 					if (!match) {
 						break; // no more matches
+					}
+
+					if (!this.options.replace) {
+						atIndex -= curNode.data.length;
+						continue;
 					}
 
 				} else if (
